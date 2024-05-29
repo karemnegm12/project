@@ -1,0 +1,71 @@
+int currentSteps = 0;
+  List<Step> getstep() => [
+        Step(
+          state: currentSteps > 0 ? StepState.complete : StepState.indexed,
+          isActive: currentSteps >= 0,
+          title: const Text('Customer information'),
+          content: const CustomerInformation(),
+        ),
+        Step(
+          state: currentSteps > 1 ? StepState.complete : StepState.indexed,
+          isActive: currentSteps >= 1,
+          title: const Text('Payment information'),
+          content: const PaymentInformation(),
+        ),
+        Step(
+          state: currentSteps > 2 ? StepState.complete : StepState.indexed,
+          isActive: currentSteps >= 2,
+          title: const Text('Booking is confirmed!'),
+          content: const BookingIsconfirmed(),
+        ),
+      ];
+      Theme(
+      data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.light(primary: Color(0xff203351))),
+      child: Stepper(
+        type: StepperType.horizontal,
+        currentStep: currentSteps,
+        onStepContinue: () {
+          final isLaststep = currentSteps == getstep().length - 1;
+          if (isLaststep) {
+            print('complete');
+          } else {
+            setState(() {
+              currentSteps += 1;
+            });
+          }
+        },
+        onStepCancel: () {
+          currentSteps == 0
+              ? null
+              : setState(() {
+                  currentSteps -= 1;
+                });
+        },
+        steps: getstep(),
+        controlsBuilder: (context, details) {
+          return Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 11),
+                  child: MaterialButton(
+                    onPressed: details.onStepContinue,
+                    color: const Color(0xff203351),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'NEXT: FINAL STEP',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
